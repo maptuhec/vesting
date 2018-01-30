@@ -1,9 +1,9 @@
 var VestingToken = artifacts.require("./VestibleToken.sol")
 var Vesting = artifacts.require("./Vesting.sol")
 const utils = require('./utils');
-const expectThrow = util.expectThrow;
-const currentTime = util.web3Now;
-const timeTravel = util.timeTravel
+const expectThrow = utils.expectThrow;
+const currentTime = utils.web3Now;
+const timeTravel = utils.timeTravel
 
 contract('Vesting', function (accounts) {
 
