@@ -4,7 +4,6 @@ import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
 contract Vesting is Ownable {
 	address public owner;
 	address public tokenAddress;
-	uint256 public tokenAmount;
 	bytes32 public startDate;
 
 	//First half of the year is 182 and the second is 183
@@ -17,10 +16,9 @@ contract Vesting is Ownable {
 	uint256 public fifthPeriod = fourthPeriod + firstHalf;
 	
 	//TODO Add requires
-	function Vesting(address _tokenAddress, uint256 _tokenAmount, bytes32 _startDate ) public {
+	function Vesting(address _tokenAddress, bytes32 _startDate ) public {
 		owner = msg.sender;
 		tokenAddress = _tokenAddress;
-		tokenAmount = _tokenAmount;
 		startDate = _startDate;
 	}
 

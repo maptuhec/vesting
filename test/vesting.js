@@ -10,32 +10,30 @@ contract('Vesting', function (accounts) {
 	var vestingContract;
 	var token;
 	var amount = 1000
-	var tokenAddress = accounts[0];
-	var vestingAddress = accounts[1];
+	var tokenOwnerAddress = accounts[0];
+	var contractOwnerAddress = accounts[1];
 
 	beforeEach(async function () {
 
 		token = await VestingToken.new({
-			from: tokenAddress
+			from: tokenOwnerAddress
 		})
 
 		var currentTimestamp = Date.now() / 1000 | 0;
 
-		vestingContract = await Vesting.new({
-			tokenAddress,
-			amount,
-			currentTimestamp,
-			from: vestingAddress
-		})
+		vestingContract = await Vesting.new(tokenOwnerAddress,
+			currentTimestamp, {
+				from: contractOwnerAddress
+			})
 
-		token.mint(vestingAddress, amount);
+		token.mint(contractOwnerAddress, amount);
 	});
 
 	it("should be owned by owner", async function () {
 		let _owner = await vestingContract.owner({
-			from: vestingAddress
+			from: contractOwnerAddress
 		});
-		assert.strictEqual(_owner, vestingAddress, "contract is not owned by owner");
+		assert.strictEqual(_owner, contractOwnerAddress, "contract is not owned by owner");
 	});
 
 })
