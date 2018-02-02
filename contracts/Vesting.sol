@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
+import './VestibleToken.sol';
 
 contract Vesting is Ownable {
 	address public owner;
@@ -26,10 +27,11 @@ contract Vesting is Ownable {
 	}
 
 	function claim() public payable onlyOwner {
-		require(tokenAddress.balance > 0);
-		
-		if (tokenBalance < 0) {
-			tokenBalance = tokenAddress.balance;
+		VestibleToken token = new VestibleToken();
+		require(token.balanceOf(tokenAddress) > 0);
+
+		if (tokenBalance == 0) {
+			tokenBalance = token.balanceOf(tokenAddress);
 			uint256 firstPeriodTokens = tokenBalance * 20 / 100;
 			uint256 secondPeriodTokens = tokenBalance * 20 / 100;
 			uint256 thirdPeriodTokens = tokenBalance * 20 / 100;
@@ -37,36 +39,36 @@ contract Vesting is Ownable {
 			uint256	fifthPeriodTokens = tokenBalance * 20 / 100;
 		}
 		if (now < startDate + firstPeriod) {
-			owner.transfer(firstPeriodTokens);
+			token.transfer(owner, firstPeriodTokens);
 			LogTransferSuccessful(owner, firstPeriodTokens);
 			return;
 		}
 
 		if (now < startDate + secondPeriod && now > startDate + firstPeriod ) {
-			owner.transfer(secondPeriodTokens);
+			token.transfer(owner, secondPeriodTokens);
 			LogTransferSuccessful(owner, secondPeriodTokens);
 			return;
 		}
 
 		if (now < startDate + thirdPeriod && now > startDate + secondPeriod) {
-			owner.transfer(thirdPeriodTokens);
+			token.transfer(owner, thirdPeriodTokens);
 			LogTransferSuccessful(owner, thirdPeriodTokens);
 			return;
 		}
 
 		if (now < startDate + fourthPeriod && now > startDate + thirdPeriod) {
-			owner.transfer(fourthPeriodTokens);
+			token.transfer(owner, fourthPeriodTokens);
 			LogTransferSuccessful(owner, fourthPeriodTokens);
 			return;
 		}
 
 		if (now < startDate + fifthPeriod && now > startDate + fourthPeriod) {
-			owner.transfer(fifthPeriodTokens);
+			token.transfer(owner, fifthPeriodTokens);
 			LogTransferSuccessful(owner, fourthPeriodTokens);
 			return;
 		} 
 		if (now > startDate + fifthPeriod) {
-			owner.transfer(tokenBalance);
+			token.transfer(owner, tokenBalance);
 			LogTransferSuccessful(owner, tokenBalance);
 			return;
 		}
