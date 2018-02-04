@@ -12,7 +12,7 @@ module.exports = async function (deployer, network, accounts) {
 	await deployer.deploy(VestingContract, tokenAddress, currentTimestamp, {
 		from: accounts[1]
 	});
-	let vestingContract = VestingContract.deployed();
+	let vestingContract = await VestingContract.deployed();
 	let vestingAddress = vestingContract.address;
 	token.mint(vestingAddress, amount);
 };

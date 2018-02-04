@@ -13,6 +13,7 @@ contract('Vesting', function (accounts) {
 	var tokenOwnerAddress = accounts[0];
 	var contractOwnerAddress = accounts[1];
 	var tokenInstance;
+	var currentTimestamp;
 	const day = 24 * 60 * 60;
 	const firstHalf = 60 * 60 * 24 * 182;
 	const secondHalf = 60 * 60 * 24 * 183;
@@ -28,32 +29,31 @@ contract('Vesting', function (accounts) {
 			from: tokenOwnerAddress
 		})
 
-		var currentTimestamp = Date.now() / 1000 | 0;
+		currentTimestamp = Date.now() / 1000 | 0;
 		vestingContract = await Vesting.new(token.address,
-			currentTimestamp, {
+			currentTime(web3), {
 				from: contractOwnerAddress
 			})
+
 		token.mint(vestingContract.address, amount);
 	});
 
 	it("should be owned by owner", async function () {
 		let _owner = await vestingContract.owner({
-			from: contractOwnerAddress
+			from: vestingContract.address
 		});
-		console.log(vestingContract.owner);
 		assert.strictEqual(_owner, contractOwnerAddress, "contract is not owned by owner");
 	});
 
-	// Claim function tests
+	// // Claim function tests
 	it("should transfer the tokens to the owner for the first period", async function () {
-		let initialOwnerBalance = await token.balanceOf(contractOwnerAddress);
-		console.log(initialOwnerBalance);
+		let initialOwnerBalance = await token.balanceOf(vestingContract.address);
 		await timeTravel(web3, day);
 		await vestingContract.claim({
 			from: contractOwnerAddress
 		});
 
-		let finalOwnerBalance = await token.balanceOf(tokenOwnerAddress);
+		let finalOwnerBalance = await token.balanceOf(vestingContract.address);
 		console.log(finalOwnerBalance);
 		assert.equal(finalOwnerBalance.toString(), initialOwnerBalance.toString() - 200, "The transfer wasn't successful")
 	})
@@ -164,5 +164,11 @@ contract('Vesting', function (accounts) {
 	// })
 
 	// //Negative case 
+	// it("shuld throw if the token balance is not greater that zero", async function () {
+	// 	await timeTravel(web3, day);
+	// 	await expectThrow(vestingContract.claim({
+	// 		from: contractOwnerAddress
+	// 	}));
+	// });
 
 })
