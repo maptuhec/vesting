@@ -27,11 +27,11 @@ contract Vesting is Ownable {
 	}
 
 	function claim() public payable onlyOwner {
-		VestibleToken token = new VestibleToken();
-		require(token.balanceOf(tokenAddress) > 0);
+		VestibleToken token = VestibleToken(tokenAddress);
+		require(token.balanceOf(this) > 0);
 
 		if (tokenBalance == 0) {
-			tokenBalance = token.balanceOf(tokenAddress);
+			tokenBalance = token.balanceOf(this);
 			uint256 firstPeriodTokens = tokenBalance * 20 / 100;
 			uint256 secondPeriodTokens = tokenBalance * 20 / 100;
 			uint256 thirdPeriodTokens = tokenBalance * 20 / 100;

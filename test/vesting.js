@@ -36,17 +36,17 @@ contract('Vesting', function (accounts) {
 		token.mint(contractOwnerAddress, amount);
 	});
 
-	// it("should be owned by owner", async function () {
-	// 	let _owner = await vestingContract.owner({
-	// 		from: contractOwnerAddress
-	// 	});
-	// 	console.log(vestingContract.owner);
-	// 	assert.strictEqual(_owner, contractOwnerAddress, "contract is not owned by owner");
-	// });
+	it("should be owned by owner", async function () {
+		let _owner = await vestingContract.owner({
+			from: contractOwnerAddress
+		});
+		console.log(vestingContract.owner);
+		assert.strictEqual(_owner, contractOwnerAddress, "contract is not owned by owner");
+	});
 
 	// Claim function tests
 	it("should transfer the tokens to the owner for the first period", async function () {
-		let initialOwnerBalance = await token.balanceOf(tokenOwnerAddress);
+		let initialOwnerBalance = await token.balanceOf(contractOwnerAddress);
 		console.log(initialOwnerBalance);
 		await timeTravel(web3, day);
 		await vestingContract.claim({
