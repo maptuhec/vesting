@@ -27,49 +27,57 @@ contract Vesting is Ownable {
 	}
 
 	function claim() public payable onlyOwner {
-		VestibleToken token = VestibleToken(tokenAddress);
+		ERC20 token = ERC20(tokenAddress);
 		require(token.balanceOf(this) > 0);
+		require(now > startDate);
 
 		if (tokenBalance == 0) {
 			tokenBalance = token.balanceOf(this);
-			uint256 firstPeriodTokens = tokenBalance * 20 / 100;
-			uint256 secondPeriodTokens = tokenBalance * 20 / 100;
-			uint256 thirdPeriodTokens = tokenBalance * 20 / 100;
-			uint256 fourthPeriodTokens = tokenBalance * 20 / 100;
-			uint256	fifthPeriodTokens = tokenBalance * 20 / 100;
+			uint256 owedFirstPeriodTokens = tokenBalance * 20 / 100;
+			uint256 owedSecondPeriodTokens = tokenBalance * 40 / 100;
+			uint256 owedThirdPeriodTokens = tokenBalance * 60 / 100;
+			uint256 owedFourthPeriodTokens = tokenBalance * 80 / 100;
+			uint256	owedFifthPeriodTokens = tokenBalance * 100 / 100;
+			uint256 claimedTokens = 0;
 		}
 		if (now < startDate + firstPeriod) {
-			token.transfer(owner, firstPeriodTokens);
-			LogTransferSuccessful(owner, firstPeriodTokens);
+			token.transfer(owner, owedFirstPeriodTokens - claimedTokens);
+			LogTransferSuccessful(owner, owedFirstPeriodTokens - claimedTokens);
+			claimedTokens = owedFirstPeriodTokens;
 			return;
 		}
 
 		if (now < startDate + secondPeriod && now > startDate + firstPeriod ) {
-			token.transfer(owner, secondPeriodTokens);
-			LogTransferSuccessful(owner, secondPeriodTokens);
+			token.transfer(owner, owedSecondPeriodTokens - claimedTokens);
+			LogTransferSuccessful(owner, owedSecondPeriodTokens - claimedTokens);
+			claimedTokens += owedSecondPeriodTokens;
 			return;
 		}
 
 		if (now < startDate + thirdPeriod && now > startDate + secondPeriod) {
-			token.transfer(owner, thirdPeriodTokens);
-			LogTransferSuccessful(owner, thirdPeriodTokens);
+			token.transfer(owner, owedThirdPeriodTokens - claimedTokens);
+			LogTransferSuccessful(owner, owedThirdPeriodTokens - claimedTokens);
+			claimedTokens += owedThirdPeriodTokens;
 			return;
 		}
 
 		if (now < startDate + fourthPeriod && now > startDate + thirdPeriod) {
-			token.transfer(owner, fourthPeriodTokens);
-			LogTransferSuccessful(owner, fourthPeriodTokens);
+			token.transfer(owner, owedFourthPeriodTokens - claimedTokens);
+			LogTransferSuccessful(owner, owedFourthPeriodTokens - claimedTokens);
+			claimedTokens += owedFourthPeriodTokens;
 			return;
 		}
 
 		if (now < startDate + fifthPeriod && now > startDate + fourthPeriod) {
-			token.transfer(owner, fifthPeriodTokens);
-			LogTransferSuccessful(owner, fourthPeriodTokens);
+			token.transfer(owner, owedFifthPeriodTokens - claimedTokens);
+			LogTransferSuccessful(owner, owedFifthPeriodTokens - claimedTokens);
+			claimedTokens += owedFifthPeriodTokens;
 			return;
 		} 
 		if (now > startDate + fifthPeriod) {
 			token.transfer(owner, tokenBalance);
 			LogTransferSuccessful(owner, tokenBalance);
+			claimedTokens += tokenBalance;
 			return;
 		}
 	}
