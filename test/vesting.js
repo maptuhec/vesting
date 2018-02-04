@@ -29,11 +29,11 @@ contract('Vesting', function (accounts) {
 		})
 
 		var currentTimestamp = Date.now() / 1000 | 0;
-		vestingContract = await Vesting.new(tokenOwnerAddress,
+		vestingContract = await Vesting.new(token.address,
 			currentTimestamp, {
 				from: contractOwnerAddress
 			})
-		token.mint(contractOwnerAddress, amount);
+		token.mint(vestingContract.address, amount);
 	});
 
 	it("should be owned by owner", async function () {
