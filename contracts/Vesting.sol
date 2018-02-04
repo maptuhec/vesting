@@ -1,5 +1,6 @@
 pragma solidity ^0.4.18;
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
+import '../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol';
 import './VestibleToken.sol';
 
 contract Vesting is Ownable {
@@ -41,6 +42,7 @@ contract Vesting is Ownable {
 			uint256 claimedTokens = 0;
 		}
 		if (now < startDate + firstPeriod) {
+			require(owedFirstPeriodTokens > claimedTokens);
 			token.transfer(owner, owedFirstPeriodTokens - claimedTokens);
 			LogTransferSuccessful(owner, owedFirstPeriodTokens - claimedTokens);
 			claimedTokens = owedFirstPeriodTokens;
@@ -48,36 +50,41 @@ contract Vesting is Ownable {
 		}
 
 		if (now < startDate + secondPeriod && now > startDate + firstPeriod ) {
+			require(owedSecondPeriodTokens > claimedTokens);
 			token.transfer(owner, owedSecondPeriodTokens - claimedTokens);
 			LogTransferSuccessful(owner, owedSecondPeriodTokens - claimedTokens);
-			claimedTokens += owedSecondPeriodTokens;
+			claimedTokens = owedSecondPeriodTokens;
 			return;
 		}
 
 		if (now < startDate + thirdPeriod && now > startDate + secondPeriod) {
+			require(owedThirdPeriodTokens > claimedTokens);
 			token.transfer(owner, owedThirdPeriodTokens - claimedTokens);
 			LogTransferSuccessful(owner, owedThirdPeriodTokens - claimedTokens);
-			claimedTokens += owedThirdPeriodTokens;
+			claimedTokens = owedThirdPeriodTokens;
 			return;
 		}
 
 		if (now < startDate + fourthPeriod && now > startDate + thirdPeriod) {
+			require(owedFourthPeriodTokens > claimedTokens);
 			token.transfer(owner, owedFourthPeriodTokens - claimedTokens);
 			LogTransferSuccessful(owner, owedFourthPeriodTokens - claimedTokens);
-			claimedTokens += owedFourthPeriodTokens;
+			claimedTokens = owedFourthPeriodTokens;
 			return;
 		}
 
 		if (now < startDate + fifthPeriod && now > startDate + fourthPeriod) {
+			require(owedFifthPeriodTokens > claimedTokens);
 			token.transfer(owner, owedFifthPeriodTokens - claimedTokens);
 			LogTransferSuccessful(owner, owedFifthPeriodTokens - claimedTokens);
-			claimedTokens += owedFifthPeriodTokens;
+			claimedTokens = owedFifthPeriodTokens;
 			return;
 		} 
 		if (now > startDate + fifthPeriod) {
+			tokenBalance = token.balanceOf(this);
 			token.transfer(owner, tokenBalance);
 			LogTransferSuccessful(owner, tokenBalance);
-			claimedTokens += tokenBalance;
+			claimedTokens = tokenBalance;
 			return;
 		}
 	}
