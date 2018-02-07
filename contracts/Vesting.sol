@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
-import '../node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20.sol';
+import '../node_modules/zeppelin-solidity/contracts/token/ERC20/BasicToken.sol';
 import './VestibleToken.sol';
 
 contract Vesting is Ownable {
@@ -27,7 +27,7 @@ contract Vesting is Ownable {
 	}
 
 	function claim() public payable onlyOwner {
-		ERC20 token = ERC20(tokenAddress);
+		BasicToken token = BasicToken(tokenAddress);
 		require(token.balanceOf(this) > 0);
 		require(now > startDate);
 
