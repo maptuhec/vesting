@@ -15,8 +15,8 @@ contract('Vesting', function (accounts) {
 	var tokenInstance;
 	var currentTimestamp;
 	const day = 24 * 60 * 60;
-	const firstHalf = 60 * 60 * 24 * 182;
-	const secondHalf = 60 * 60 * 24 * 183;
+	const firstHalf = 60 * 60 * 24 * 10;
+	const secondHalf = 60 * 60 * 24 * 11;
 	const firstPeriod = firstHalf;
 	const secondPeriod = firstPeriod + secondHalf;
 	const thirdPeriod = secondPeriod + firstHalf;

@@ -9,13 +9,13 @@ contract Vesting is Ownable {
 	uint256 public tokenBalance;
 
 	//First half of the year is 182 and the second is 183
-	uint256 public firstHalf = 60 * 60 * 24 * 182;
-	uint256 public secondHalf = 60 * 60 * 24 * 183;
-	uint256 public firstPeriod = firstHalf;
-	uint256 public secondPeriod = firstPeriod + secondHalf;
-	uint256 public thirdPeriod = secondPeriod + firstHalf;
-	uint256 public fourthPeriod = thirdPeriod + secondHalf;
-	uint256 public fifthPeriod = fourthPeriod + firstHalf;
+	uint256 public firstMonth = 10 days;
+	uint256 public secondMonth = 11 days;
+	uint256 public firstPeriod = firstMonth;
+	uint256 public secondPeriod = firstMonth + secondMonth;
+	uint256 public thirdPeriod = secondPeriod + firstMonth;
+	uint256 public fourthPeriod = thirdPeriod + secondMonth;
+	uint256 public fifthPeriod = fourthPeriod + firstMonth;
 
 	event LogTransferSuccessful(address recepient, uint amount);
 
